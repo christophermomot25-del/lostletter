@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Letter for Amber</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fdf2f2;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 400px; 
+            height: 280px;
+            cursor: pointer;
+            margin-top: 150px; 
+        }
+
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e0e0e0;
+            border-radius: 0 0 5px 5px;
+            z-index: 1;
+        }
+
+        .letter {
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 160%; 
+            background: white;
+            z-index: 2;
+            padding: 30px; 
+            box-sizing: border-box;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            text-align: center;
+            clip-path: inset(100% 0 0 0); 
+            transition: clip-path 0.3s;
+        }
+
+        .letter h2 {
+            color: #d63031;
+            margin-top: 5px;
+            font-size: 2rem;
+        }
+        
+        .letter p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .proposal-text {
+            font-size: 1.8rem !important;
+            font-weight: bold;
+            color: #b33939;
+            margin-top: 25px;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            opacity: 0; 
+        }
+
+        .btn {
+            padding: 10px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            transition: all 0.2s;
+        }
+
+        .yes-btn {
+            background-color: #d63031;
+            color: white;
+            text-decoration: none; 
+        }
+        
+        .yes-btn:hover {
+            background-color: #e17055;
+            transform: scale(1.1);
+        }
+
+        .no-btn {
+            background-color: #e0e0e0;
+            color: #555;
+        }
+
+        .envelope-front {
+            position: absolute;
+            width: 0;
+            height: 0;
+            z-index: 3;
+            border-left: 200px solid #f2f2f2;
+            border-right: 200px solid #f2f2f2;
+            border-bottom: 140px solid #e8e8e8;
+            border-top: 140px solid transparent;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            z-index: 4;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-top: 140px solid #d1d1d1;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* --- ANIMATION --- */
+
+        .envelope-wrapper:not(.open) .letter {
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .envelope-wrapper.open .letter {
+            animation: jumpOut 1.5s forwards;
+            clip-path: inset(0 0 0 0);
+            z-index: 5;
+        }
+
+        .envelope-wrapper.open .button-container {
+            animation: fadeIn 1s forwards;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes jumpOut {
+            0% { transform: translateY(0); }
+            40% { transform: translateY(-350px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .instruction {
+            position: absolute;
+            top: 5%;
+            width: 100%;
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instruction">Click the envelope, Amber...</div>
+
+    <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+        <div class="flap"></div>
+        <div class="envelope-front"></div>
+        <div class="envelope-back"></div>
+        
+        <div class="letter">
+            <h2>Dear Amber,</h2>
+            <p>Hi Amber, I hope this letter gets to you safely. I love you so much and can't wait to see you soon</p>
+            <p>I am so lucky to have you in my life. I was wondering......</p>
+            <span class="proposal-text">
+                Will you be my valentine?
+            </span>
+            
+            <div class="button-container">
+                <button class="btn yes-btn" onclick="event.stopPropagation(); location.href='yes.html'">YES</button>
+                
+                <button id="noBtn" class="btn no-btn" onclick="funnyNo(event)">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        const noMessages = [
+            "Are you sure?",
+            "Really sure?",
+            "Think again!",
+            "Last chance!",
+            "Surely not?",
+            "You might regret this!",
+            "Give it another thought!",
+            "Are you absolutely certain?",
+            "This could be a mistake!",
+            "Have a heart!",
+            "Don't be so cold!",
+            "Change of heart?",
+            "Wouldn't you reconsider?",
+            "Is that your final answer?",
+            "You're breaking my heart ;(",
+        ];
+
+        function funnyNo(event) {
+            event.stopPropagation(); // Stops the envelope from closing
+            
+            const btn = document.getElementById("noBtn");
+            const yesBtn = document.querySelector('.yes-btn');
+
+            if (clickCount < noMessages.length) {
+                // Change the text to the next funny message
+                btn.innerText = noMessages[clickCount];
+                clickCount++;
+                
+                // OPTIONAL: Make the Yes button grow every time she clicks No
+                let currentSize = 1 + (clickCount * 0.2);
+                yesBtn.style.transform = `scale(${currentSize})`;
+                
+            } else {
+                // If she runs out of messages, force the NO button to become a YES button
+                btn.innerText = "OKAY YES!";
+                btn.style.backgroundColor = "#d63031";
+                btn.style.color = "white";
+                // Update the click function to go to the yes page
+                btn.onclick = function(e) {
+                    e.stopPropagation();
+                    location.href = 'yes.html';
+                };
+            }
+        }
+    </script>
+
+</body>
+</html>
